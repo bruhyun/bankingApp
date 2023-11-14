@@ -1,0 +1,111 @@
+Scanner sc = new Scanner(System.in);
+			//Changed
+			System.out.println("Welcome to Infinite Capital!"); //added bank title
+			System.out.println("For New Customers press [1]"); //added
+			System.out.println("For returning customers press [2]");
+		
+		int choice = sc.nextInt();
+		
+		if(choice != 1 && choice!=2) { //changed added choice 2
+				sc.close();
+				return;
+			}
+		
+		/*IDEA: ASK USER WHICH ACCOUNT THEY WOULD LIKE TO OPEN SAVINGS OR CHECKINGS AND THEN PROVIDE MENU
+		 IN THIS AREA ALSO ASK USER IF THEY ARE AN EXISTING CUSTOMER OR A NEW CUSTOMER, IF NEW CREATE NEW USER
+		 IDEA; IF USER SELECTS [2] ASK FOR USERNAME AND PASSWORD, MAKE PASSWORD NOT MATTER ALLOW THEM THROUGH INTO THE PROGRAM 
+		 REGARDLESS.
+		 
+		 /*if(choice == 1) {
+			System.out.println("Enter your user-name: ");
+			String userName = sc.next();
+			System.out.println("Enter your password: ");
+			String passWord = sc.next();
+		} else {
+		 if(choice == 2){
+		 	System.out.println("Please enter your user-name and password");
+		 	System.out.println("User-name: ");
+		 	String userName = sc.next();
+		 	System.out.println("Password:  "); //make password look like **    
+		 	String passWord = sc.next();
+		 }
+		 }
+		*/
+		
+		/*
+		 * System.out.println("Which account would you like to access");
+		 	System.out.println("Savings [1]");
+		 	System.out.println("Checking [2]");
+		 	System.out.println("New account [3]");
+		 	choice = sc.nextInt();
+		*/
+		
+		double balance = 0.00;
+
+		while(true) {
+			//IDEA: PROVIDE NAME LIKE System.out.prinln("Welcome "+userName);
+			System.out.println("Press 1 to check balance: ");
+			System.out.println("Press 2 to deposit funds: ");
+			System.out.println("Press 3 to withdraw funds: ");
+			System.out.println("Press 4 to transfer money: ");
+			System.out.println("Press 5 to make a new account: ");
+			System.out.println("Press 6 to log off: ");
+			System.out.println("Press 1-6:  ");
+			
+			choice = sc.nextInt();
+			
+			switch(choice) {
+			
+				case(1):
+					
+					showBalance(balance);
+					
+					break;
+				case(2):
+					System.out.println("Please enter the amount you would like to deposit: ");
+					double depositAmount = sc.nextDouble();
+					balance = depositFunds(balance, depositAmount);
+					break;
+				case(3):
+					System.out.print("Please enter the amount you would like to withdraw: ");
+					double withdrawAmount = sc.nextDouble();
+					balance = withdrawFunds(balance, withdrawAmount);
+					break;
+				case(4):
+					System.out.println("Please enter the transfer amount")
+					
+					break;
+				case(5):
+					
+					
+					break;
+				case(6):
+					System.out.println("You are logged off.");
+					System.exit(0);
+				default:
+					System.out.println("Invalid input! Pick 1-6: ");
+			}
+			
+		}
+			
+		
+	}
+	
+	
+	public static void showBalance(double balance) {
+		System.out.println("This is your balance: "+balance);
+	}
+	public static double depositFunds(double balance, double amount) {
+		balance += amount;
+		System.out.println("Amount Deposited: "+amount);
+		return balance;
+	}
+	public static double withdrawFunds(double balance, double amount) {
+		if(amount > balance) {
+			System.out.println("INSUFFICENT FUNDS");
+		}else{
+			balance -= amount;
+			System.out.println("Amount withdrawn: "+ amount);
+		}
+		return balance;
+	
