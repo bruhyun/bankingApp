@@ -1,111 +1,290 @@
-Scanner sc = new Scanner(System.in);
-			//Changed
-			System.out.println("Welcome to Infinite Capital!"); //added bank title
-			System.out.println("For New Customers press [1]"); //added
-			System.out.println("For returning customers press [2]");
-		
-		int choice = sc.nextInt();
-		
-		if(choice != 1 && choice!=2) { //changed added choice 2
-				sc.close();
-				return;
-			}
-		
-		/*IDEA: ASK USER WHICH ACCOUNT THEY WOULD LIKE TO OPEN SAVINGS OR CHECKINGS AND THEN PROVIDE MENU
-		 IN THIS AREA ALSO ASK USER IF THEY ARE AN EXISTING CUSTOMER OR A NEW CUSTOMER, IF NEW CREATE NEW USER
-		 IDEA; IF USER SELECTS [2] ASK FOR USERNAME AND PASSWORD, MAKE PASSWORD NOT MATTER ALLOW THEM THROUGH INTO THE PROGRAM 
-		 REGARDLESS.
-		 
-		 /*if(choice == 1) {
-			System.out.println("Enter your user-name: ");
-			String userName = sc.next();
-			System.out.println("Enter your password: ");
-			String passWord = sc.next();
-		} else {
-		 if(choice == 2){
-		 	System.out.println("Please enter your user-name and password");
-		 	System.out.println("User-name: ");
-		 	String userName = sc.next();
-		 	System.out.println("Password:  "); //make password look like **    
-		 	String passWord = sc.next();
-		 }
-		 }
-		*/
-		
-		/*
-		 * System.out.println("Which account would you like to access");
-		 	System.out.println("Savings [1]");
-		 	System.out.println("Checking [2]");
-		 	System.out.println("New account [3]");
-		 	choice = sc.nextInt();
-		*/
-		
-		double balance = 0.00;
+//ERRORS ALL OVER THIS FIX
 
-		while(true) {
-			//IDEA: PROVIDE NAME LIKE System.out.prinln("Welcome "+userName);
-			System.out.println("Press 1 to check balance: ");
-			System.out.println("Press 2 to deposit funds: ");
-			System.out.println("Press 3 to withdraw funds: ");
-			System.out.println("Press 4 to transfer money: ");
-			System.out.println("Press 5 to make a new account: ");
-			System.out.println("Press 6 to log off: ");
-			System.out.println("Press 1-6:  ");
-			
-			choice = sc.nextInt();
-			
-			switch(choice) {
-			
-				case(1):
-					
-					showBalance(balance);
-					
-					break;
-				case(2):
-					System.out.println("Please enter the amount you would like to deposit: ");
-					double depositAmount = sc.nextDouble();
-					balance = depositFunds(balance, depositAmount);
-					break;
-				case(3):
-					System.out.print("Please enter the amount you would like to withdraw: ");
-					double withdrawAmount = sc.nextDouble();
-					balance = withdrawFunds(balance, withdrawAmount);
-					break;
-				case(4):
-					System.out.println("Please enter the transfer amount")
-					
-					break;
-				case(5):
-					
-					
-					break;
-				case(6):
-					System.out.println("You are logged off.");
-					System.exit(0);
-				default:
-					System.out.println("Invalid input! Pick 1-6: ");
-			}
-			
-		}
-			
+package bankingApp;
+import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+public class bankingApp {
+
+	public static void main(String[] args) {
+		static Map<String, Integer> ownedStocks = new HashMap<>();
 		
-	}
+		Scanner sc = new Scanner(System.in);
+		String userName = "";
+		String passWord = "";
+		boolean loggedIn = false;
+		//Change: instead of just pressing 1  to continue you now have some choices, changed formatting
+		
+		//Change: made it so that if the user enters [2] error, they have to create an account first
 	
+		System.out.println("Welcome to Infinite Capital!"); //added bank title
+		System.out.println("For New Customers press       [1]"); //added
+		System.out.println("For returning customers press [2]");				
+		int choice = sc.nextInt();
 	
-	public static void showBalance(double balance) {
-		System.out.println("This is your balance: "+balance);
-	}
-	public static double depositFunds(double balance, double amount) {
-		balance += amount;
-		System.out.println("Amount Deposited: "+amount);
-		return balance;
-	}
-	public static double withdrawFunds(double balance, double amount) {
-		if(amount > balance) {
-			System.out.println("INSUFFICENT FUNDS");
-		}else{
-			balance -= amount;
-			System.out.println("Amount withdrawn: "+ amount);
+		if(choice != 1 && choice!=2) { //change: added choice 2
+			System.out.println("INVALID CHOICE");
+			System.out.println("Select New [1] or Existing [2]");
+			choice = sc.nextInt();
 		}
-		return balance;
 	
+	
+	
+	 if(choice == 1) {
+		System.out.println("Create your username: ");
+		userName = sc.next();
+		System.out.println("Create your password: ");
+		passWord = sc.next();
+		System.out.println("Account Successfully Created!");
+	}
+	//Change: Once user has created their account, they will be asked to login. Credentials have to match when user created account
+	 //or else they will be shown an error
+	while(!loggedIn) {
+		System.out.println("Enter your username: ");
+		String enteredUsername = sc.next();
+		System.out.println("Enter your password: ");
+		String enteredPassword = sc.next();
+		
+		if(enteredUsername.equals(userName) && enteredPassword.equals(passWord)) {
+			System.out.println("CREDENTIALS VERIFIED");
+			loggedIn = true;
+		} else {
+			System.out.println("ERROR! INCORRECT USERNAME OR PASSWORD!");
+		}
+	 }
+	
+	
+	
+	// added so user can decide which account they would like to access
+	 int accountChoice;
+	 double checkingBalance = 0.00;
+	 double savingsBalance = 0.00;
+
+	 while(true) {
+		 System.out.println("Hello "+ userName +  "! Which account would you like to access?");
+		 	System.out.println("Checking    [1]");
+		 	System.out.println("Savings     [2]");
+		 	System.out.println("Investments [3]");
+		 	System.out.println("LOG OFF     [4]");
+		 	accountChoice = sc.nextInt();
+		 	
+		 	
+		 	switch(accountChoice) {
+		 		case 1:
+		 			accountMenu(userName, "CHECKING", checkingBalance, sc);
+		 			break;
+		 		case 2:
+		 			accountMenu(userName, "SAVINGS", savingsBalance, sc);
+		 			break;
+		 		case 3:
+		 			investmentChoice(userName, "INVESTMENTS", sc);
+		 			break;
+		 		case 4:
+		 			System.out.println("LOGING OFF...");
+		 			System.out.println("Thank you for banking with Infinite Capital!");
+		 			System.out.println("See you again soon!");
+					System.exit(0);
+		 		default:
+		 			System.out.println("Invalid Choice!");
+		 			break;
+		 	}
+		 }
+	}
+
+
+public static void investmentChoice(String userName, String accountType, Scanner sc) {
+		int selection;
+
+		System.out.println("-------------"+accountType+"-------------");
+		System.out.println("$ICBNK   -(Infinte Capital)-   900.00 USD");
+		System.out.println("$MSFT      -(Microsoft)-       400.00 USD");
+		System.out.println("$AAPL        -(Apple)-         520.00 USD");
+		System.out.println("$TSLA        -(Tesla)-         220.00 USD");
+		System.out.println("$AMZN        -(Amazon)-        360.00 USD");
+		System.out.println("$GOOGL       -(Google)-        380.00 USD");
+		System.out.println("$NVDA        -(NVIDIA)-        450.00 USD");
+		System.out.println("$META    -(Meta Platforms)-    400.00 USD");
+		System.out.println("-------------------------------------");
+		System.out.println("     Press [1] to purchase or sell stock    ");
+		System.out.println("     Press [2] for MyInvestments    ");
+		System.out.println("     Press [3] to switch accounts    ");
+		
+		selection = sc.nextInt();
+		 if (selection == 1) {
+             System.out.println("Enter the stock code (e.g., $ICBNK):");
+             String stockCode = sc.next();
+
+             if (ownedStocks.containsKey(stockCode)) {
+                 System.out.println("You already own this stock. Quantity owned: " + ownedStocks.get(stockCode));
+             } else {
+                 System.out.println("Enter 'buy' to purchase or 'sell' to sell " + stockCode + " stocks:");
+                 String action = sc.next();
+
+                 System.out.println("Enter the quantity:");
+                 int quantity = sc.nextInt();
+
+                 double stockPrice = getStockPrice(stockCode); // Get the price of the stock
+
+                 if (stockPrice > 0) {
+                     if (action.equalsIgnoreCase("buy")) {
+                         double totalPrice = stockPrice * quantity;
+
+                         if (totalPrice <= balance) {
+                             balance -= totalPrice;
+                             ownedStocks.put(stockCode, quantity);
+                             System.out.println("Successfully bought " + quantity + " " + stockCode + " stocks!");
+                         } else {
+                             System.out.println("Not enough funds to purchase " + quantity + " " + stockCode + " stocks.");
+                         }
+                     } else if (action.equalsIgnoreCase("sell")) {
+                         if (ownedStocks.containsKey(stockCode) && ownedStocks.get(stockCode) >= quantity) {
+                             double totalPrice = stockPrice * quantity;
+                             balance += totalPrice;
+                             ownedStocks.put(stockCode, ownedStocks.get(stockCode) - quantity);
+                             System.out.println("Successfully sold " + quantity + " " + stockCode + " stocks!");
+                         } else {
+                             System.out.println("You don't have enough " + stockCode + " stocks to sell.");
+                         }
+                     } else {
+                         System.out.println("Invalid action!");
+                     }
+                 } else {
+                     System.out.println("Invalid stock code!");
+                 }
+             }
+         } else if (selection == 2) {
+             showMyInvestments();
+         } else if (selection == 3) {
+             return;
+         }
+     }
+ }
+
+public static void accountMenu(String userName, String accountType, double balance, Scanner sc) {
+	int choice;
+	while(true){
+		System.out.println("--------"+accountType+"--------");
+		System.out.println("Check balance  [1]");
+		System.out.println("Deposit funds  [2]");
+		System.out.println("Withdraw funds [3]");
+		System.out.println("Transfer money [4]");
+		System.out.println("Switch account [5]"); //changed from 'new' to 'switch' account
+		System.out.println("Log off        [6]");
+		System.out.println("Press 1-6:  ");
+		
+		choice = sc.nextInt();
+		
+	
+		//TransferAcc Checkings = new TransferAcc("Checkings");
+		//TransferAcc Savings = new TransferAcc("Savings");
+		
+		switch(choice) {
+		
+			case(1):
+				showBalance(balance);
+				break;
+			case(2):
+				System.out.println("Please enter the amount you would like to deposit: ");
+				System.out.print("$");
+				double depositAmount = sc.nextDouble();
+				balance = depositFunds(balance, depositAmount);
+				
+				
+				break;
+			case(3):
+				System.out.print("Please enter the amount you would like to withdraw: ");
+				System.out.print("$");
+				double withdrawAmount = sc.nextDouble();
+				balance = withdrawFunds(balance, withdrawAmount);
+				break;
+			case(4):
+				System.out.println("Please enter the transfer amount");
+				System.out.println("$");
+				double transferAmount = sc.nextDouble();
+				//Checkings.depoist(balance);
+				//Savings.depoist(balance);
+				//Checkings.transfer(transferAmount, Savings);
+				
+				break;
+			case(5):
+				return;
+			case(6):
+				System.out.println("You are logged off.");
+				System.exit(0);
+			default:
+				System.out.println("Invalid input! Pick 1-6: ");
+		}
+	}
+}
+public static void showBalance(double balance) {
+	System.out.println("This is your balance: "+balance);
+}
+public static double depositFunds(double balance, double amount) {
+	balance += amount;
+	System.out.println("Amount Deposited:$"+amount);
+	System.out.println("Current Balance:$"+balance); 
+	return balance;
+}
+public static double withdrawFunds(double balance, double amount) {
+	if(amount > balance) {
+		System.out.println("INSUFFICENT FUNDS");
+	}else{
+		balance -= amount;
+		System.out.println("Amount withdrawn:$"+amount);
+		System.out.println("Current Balance:$"+balance); 
+	}
+	return balance;
+	}
+
+public static double transfer(double balance, double amount) {
+	if (amount > balance) {
+		System.out.println("INSUFFICENT FUNDS TO TRANSFER");
+	}
+	else {
+		balance -= amount;
+		System.out.println("Amount withdrawn from Checkings:$"+amount);
+		System.out.println("Current Balance :$"+balance);
+	}
+	return balance;
+	
+}
+public static double getStockPrice(String stockCode) {
+    String fileName = "stocks.txt";
+    double stockPrice = 0.0;
+
+    try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+        String line;
+        while ((line = br.readLine()) != null) {
+            String[] parts = line.split(",");
+            if (parts.length == 2 && parts[0].equals(stockCode)) {
+                stockPrice = Double.parseDouble(parts[1]);
+                break;
+            }
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+
+    return stockPrice;
+}
+public static void displayStocks() {
+    String fileName = "stocks.txt";
+
+    try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+        String line;
+        while ((line = br.readLine()) != null) {
+            String[] parts = line.split(",");
+            if (parts.length == 2) {
+                System.out.println(parts[0] + " - Price: " + parts[1] + " USD");
+            }
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+}
+}
